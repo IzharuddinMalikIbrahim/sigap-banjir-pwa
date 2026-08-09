@@ -81,6 +81,7 @@ Konsep utama aplikasi:
 ---
 
 # Konsep Gotong Royong
+```text
 Masyarakat
      │
      ├── Lapor
@@ -103,11 +104,12 @@ Masyarakat
        └─────┬─────┘
              ▼
         Masyarakat
+```
 
 ---
 
 # System Architecture
-
+```text
 ┌─────────────────────────────────────────────┐
 │                  USER DEVICE                │
 │                                             │
@@ -154,6 +156,7 @@ Masyarakat
        │ Flood Images       │
        │ Education Media    │
        └────────────────────┘
+```
 
 ---
 
@@ -219,7 +222,7 @@ HTTPS / SSL
 ---
 
 # Arsitektur PWA
-
+```text
 Browser
    │
    ▼
@@ -232,9 +235,10 @@ Service Worker
    ├── Offline
    ├── Background Sync
    └── Push Notification
+```
 
 # Struktur Web PWA
-
+```text
 sigap-banjir/
 │
 ├── app/
@@ -417,9 +421,10 @@ sigap-banjir/
 ├── vite.config.js
 ├── phpunit.xml
 └── README.md
+```
 
 # Struktur Frontend
-
+```text
 resources/js/
 │
 ├── components/
@@ -507,6 +512,7 @@ resources/js/
 │
 ├── app.tsx
 └── vite-env.d.ts
+```
 
 # app.tsx
 ```
@@ -760,7 +766,7 @@ Status
 Severity
 
 ## Alur
-
+```text
 User
  │
  ▼
@@ -796,6 +802,7 @@ Verification
        │
        ▼
  Notification
+```
 
 # Flood Severity
 
@@ -808,7 +815,7 @@ Verification
 | `> 100 cm`    | Danger     |
 
 ## Konsep Pengembangan
-
+```text
 Water Level
      +
 Report Count
@@ -822,6 +829,7 @@ Weather Data
 Water Sensor
      ↓
 Flood Severity Score
+```
 
 # Database Architecture
 
@@ -852,7 +860,7 @@ device_tokens
 activity_logs
 
 ## Database Relations
-
+```text
                        USERS
                          │
                          │
@@ -896,6 +904,7 @@ activity_logs
                        │
                        ▼
              EDUCATION_CONTENTS
+```
 
 # Database Tables
 

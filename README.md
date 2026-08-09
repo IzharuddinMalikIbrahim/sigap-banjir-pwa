@@ -909,6 +909,7 @@ activity_logs
 # Database Tables
 
 ## users
+```text
 id
 name
 email
@@ -921,24 +922,30 @@ location_updated_at
 email_verified_at
 created_at
 updated_at
+```
 
 ## roles
+```text
 id
 name
 slug
 description
 created_at
 updated_at
+```
 
 ## permissions
+```text
 id
 name
 slug
 description
 created_at
 updated_at
+```
 
 ## flood_reports
+```text
 id
 user_id
 latitude
@@ -954,8 +961,10 @@ verified_by
 expired_at
 created_at
 updated_at
+```
 
 ## flood_report_images
+```text
 id
 flood_report_id
 file_path
@@ -964,8 +973,10 @@ mime_type
 file_size
 created_at
 updated_at
+```
 
 ## flood_report_verifications
+```text
 id
 flood_report_id
 verified_by
@@ -974,8 +985,10 @@ notes
 verified_at
 created_at
 updated_at
+```
 
 ## flood_areas
+```text
 id
 name
 code
@@ -985,8 +998,10 @@ status
 description
 created_at
 updated_at
+```
 
 ## flood_levels
+```text
 id
 name
 code
@@ -996,8 +1011,10 @@ status
 description
 created_at
 updated_at
+```
 
 ## notifications
+```text
 id
 type
 title
@@ -1006,16 +1023,20 @@ data
 priority
 created_at
 updated_at
+```
 
 ## notification_recipients
+```text
 id
 notification_id
 user_id
 read_at
 created_at
 updated_at
+```
 
 ## evacuation_posts
+```text
 id
 name
 address
@@ -1028,16 +1049,20 @@ status
 description
 created_at
 updated_at
+```
 
 ## evacuation_post_facilities
+```text
 id
 evacuation_post_id
 facility_name
 description
 created_at
 updated_at
+```
 
 ## emergency_contacts
+```text
 id
 name
 category
@@ -1048,16 +1073,20 @@ longitude
 status
 created_at
 updated_at
+```
 
 ## education_categories
+```text
 id
 name
 slug
 description
 created_at
 updated_at
+```
 
 ## education_contents
+```text
 id
 category_id
 title
@@ -1069,8 +1098,10 @@ status
 published_at
 created_at
 updated_at
+```
 
 ## device_tokens
+```text
 id
 user_id
 token
@@ -1079,8 +1110,10 @@ browser
 last_used_at
 created_at
 updated_at
+```
 
 ## activity_logs
+```text
 id
 user_id
 action
@@ -1090,11 +1123,12 @@ ip_address
 user_agent
 created_at
 updated_at
+```
 
 # User Roles
 
 ## Community
-
+```text
 view-dashboard
 view-flood-map
 create-flood-report
@@ -1104,9 +1138,10 @@ view-education
 view-evacuation-post
 confirm-flood-report
 manage-profile
+```
 
 ## Officer
-
+```text
 view-dashboard
 view-flood-map
 create-flood-report
@@ -1116,9 +1151,10 @@ view-education
 view-evacuation-post
 confirm-flood-report
 manage-profile
+```
 
 ## Administrator
-
+```text
 view-dashboard
 view-flood-map
 create-flood-report
@@ -1128,6 +1164,7 @@ view-education
 view-evacuation-post
 confirm-flood-report
 manage-profile
+```
 
 # Application Modules
 ```text
@@ -1153,35 +1190,49 @@ SIGAP BANJIR
 prefix: /api/v1
 
 ## Authentication
+```text
 POST /api/v1/auth/register
 POST /api/v1/auth/login
 POST /api/v1/auth/logout
 GET  /api/v1/auth/me
+```
 
 ## Flood Reports
+```text
 GET    /api/v1/flood-reports
 POST   /api/v1/flood-reports
 GET    /api/v1/flood-reports/{id}
 POST   /api/v1/flood-reports/{id}/confirm
 POST   /api/v1/flood-reports/{id}/cancel
+```
 
 ## Flood Map
+```text
 GET /api/v1/flood-map
 GET /api/v1/flood-areas
+```
 
 ## Notifications
+```text
 GET  /api/v1/notifications
 GET  /api/v1/notifications/unread-count
 POST /api/v1/notifications/{id}/read
 POST /api/v1/notifications/read-all
+```
 
 ## Evacuation
+```text
 GET /api/v1/evacuation-posts
 GET /api/v1/evacuation-posts/{id}
+```
 
 ## Education
+```text
 GET /api/v1/education
 GET /api/v1/education/{id}
+```
 
 # Emergency
+```text
 GET /api/v1/emergency-contacts
+```

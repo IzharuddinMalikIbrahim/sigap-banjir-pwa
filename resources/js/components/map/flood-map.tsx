@@ -85,7 +85,7 @@ export default function FloodMap({
             case 'alert':
                 return '#f97316';
 
-            case 'high alert':
+            case 'high_alert':
                 return '#ef4444';
 
             case 'danger':

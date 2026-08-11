@@ -112,8 +112,8 @@ export default function FloodMap({
 
     return (
         /* 
-          PENTING: 'relative z-0 isolate' mencegah layer leaflet dan 
-          pane internal Leaflet menembus ke atas modal/header.
+          Container luar dibuat stacking context mandiri (z-0 isolate) 
+          agar layer Leaflet (z-400..1000) tidak menembus navbar/modal/form luar.
         */
         <div
             className="relative z-0 isolate w-full overflow-hidden rounded-2xl border border-slate-200 shadow-sm"
@@ -122,7 +122,7 @@ export default function FloodMap({
             <MapContainer
                 center={mapCenter}
                 zoom={zoom}
-                className="h-full w-full"
+                className="h-full w-full z-0"
                 scrollWheelZoom={true}
             >
                 <TileLayer
@@ -229,8 +229,8 @@ export default function FloodMap({
                 )}
             </MapContainer>
 
-            {/* Legend / Petunjuk Status */}
-            <div className="pointer-events-auto absolute bottom-4 left-4 z-[10] rounded-2xl border border-slate-200/80 bg-white/95 p-3.5 shadow-lg backdrop-blur-md">
+            {/* Legend / Petunjuk Status (diberi z-[1001] agar selalu di atas pane leaflet dan kontrol zoom) */}
+            <div className="pointer-events-auto absolute bottom-4 left-4 z-[1001] rounded-2xl border border-slate-200/80 bg-white/95 p-3.5 shadow-lg backdrop-blur-md">
                 <div className="mb-2 flex items-center gap-1.5 border-b border-slate-100 pb-1.5">
                     <AlertTriangle className="h-3.5 w-3.5 text-teal-800" />
                     <p className="text-[11px] font-bold uppercase tracking-wider text-slate-700">

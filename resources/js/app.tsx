@@ -7,6 +7,7 @@ import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import HomeLayout from '@/pages/home';
 
 const appName = import.meta.env.VITE_APP_NAME || 'SIGAP BANJIR';
 
@@ -21,7 +22,7 @@ createInertiaApp({
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
             default:
-                return AppLayout;
+                return HomeLayout;
         }
     },
     strictMode: true,

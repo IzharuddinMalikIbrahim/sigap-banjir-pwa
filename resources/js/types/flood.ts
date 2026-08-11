@@ -1,27 +1,25 @@
 export type FloodSeverity =
-    | 'safe'
-    | 'warning'
-    | 'alert'
-    | 'high_alert'
-    | 'danger';
+    | 'Safe'
+    | 'Warning'
+    | 'Alert'
+    | 'High Alert'
+    | 'Danger';
 
 export type FloodReportStatus =
-    | 'submitted'
-    | 'verification'
+    | 'pending'
     | 'verified'
-    | 'published'
     | 'rejected'
     | 'expired';
 
 export interface FloodReport {
     id: number;
 
-    user_id: number;
+    user_id: number | null;
 
     latitude: number;
     longitude: number;
 
-    address: string | null;
+    address: string;
 
     water_level: number;
 
@@ -34,11 +32,13 @@ export interface FloodReport {
     reported_at: string;
 
     verified_at: string | null;
+
     verified_by: number | null;
 
     expired_at: string | null;
 
     created_at: string;
+
     updated_at: string;
 }
 

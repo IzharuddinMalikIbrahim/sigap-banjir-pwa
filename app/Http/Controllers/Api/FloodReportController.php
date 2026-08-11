@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\DB;
 class FloodReportController extends Controller
 {
     /**
-     * Get verified flood reports.
+     * Get published flood reports.
      */
     public function index()
     {
         $reports = FloodReport::with('images')
-            ->where('status', 'verified')
+            ->where('status', 'published')
             ->where(function ($query) {
                 $query
                     ->whereNull('expired_at')
@@ -60,6 +60,7 @@ class FloodReportController extends Controller
                 'required',
                 'numeric',
                 'min:0',
+                'max:999.99',
             ],
 
             'description' => [
@@ -76,17 +77,39 @@ class FloodReportController extends Controller
 
             'images.*' => [
                 'image',
+                'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Calculate Severity
+        |--------------------------------------------------------------------------
+        |
+        | Sesuai dengan ENUM database:
+        |
+        | safe
+        | warning
+        | alert
+        | high_alert
+        | danger
+        |
+        */
+
         $severity = $this->calculateSeverity(
-            $validated['water_level']
+            (float) $validated['water_level']
         );
 
         DB::beginTransaction();
 
         try {
+            /*
+            |--------------------------------------------------------------------------
+            | Create Flood Report
+            |--------------------------------------------------------------------------
+            */
+
             $report = FloodReport::create([
                 'user_id' => $request->user()?->id,
 
@@ -99,22 +122,24 @@ class FloodReportController extends Controller
 
                 'severity' => $severity,
 
-                'description' =>
-                    $validated['description'] ?? null,
+                'description' => $validated['description'] ?? null,
 
-                'status' => 'pending',
+                /*
+                 * Sesuai dengan ENUM database server.
+                 */
+                'status' => 'submitted',
 
                 'reported_at' => now(),
             ]);
 
             /*
-             * Handle image uploads.
-             */
+            |--------------------------------------------------------------------------
+            | Upload Images
+            |--------------------------------------------------------------------------
+            */
+
             if ($request->hasFile('images')) {
-                foreach (
-                    $request->file('images')
-                    as $image
-                ) {
+                foreach ($request->file('images') as $image) {
                     $path = $image->store(
                         'flood-images',
                         'public'
@@ -138,8 +163,11 @@ class FloodReportController extends Controller
             DB::commit();
 
             /*
-             * Load images after transaction.
-             */
+            |--------------------------------------------------------------------------
+            | Load Images
+            |--------------------------------------------------------------------------
+            */
+
             $report->load('images');
 
             return response()->json([
@@ -154,39 +182,44 @@ class FloodReportController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
 
+            report($e);
+
             return response()->json([
                 'status' => 'error',
 
                 'message' =>
                     'Gagal mengirim laporan.',
 
-                'error' => $e->getMessage(),
+                'error' => config('app.debug')
+                    ? $e->getMessage()
+                    : 'Terjadi kesalahan pada server.',
             ], 500);
         }
     }
 
     /**
      * Calculate flood severity based on water level.
+     *
+     * Database ENUM:
+     *
+     * safe
+     * warning
+     * alert
+     * high_alert
+     * danger
      */
-    private function calculateSeverity(
-        float|int $waterLevel
-    ): string {
-        if ($waterLevel < 10) {
-            return 'Safe';
-        }
+    private function calculateSeverity(float|int $waterLevel): string
+    {
+        return match (true) {
+            $waterLevel < 10 => 'safe',
 
-        if ($waterLevel <= 30) {
-            return 'Warning';
-        }
+            $waterLevel <= 30 => 'warning',
 
-        if ($waterLevel <= 50) {
-            return 'Alert';
-        }
+            $waterLevel <= 50 => 'alert',
 
-        if ($waterLevel <= 100) {
-            return 'High Alert';
-        }
+            $waterLevel <= 100 => 'high_alert',
 
-        return 'Danger';
+            default => 'danger',
+        };
     }
 }

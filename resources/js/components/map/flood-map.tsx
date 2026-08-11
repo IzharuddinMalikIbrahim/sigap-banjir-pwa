@@ -107,7 +107,7 @@ export default function FloodMap({
             case 'alert':
                 return 'Siaga';
 
-            case 'high alert':
+            case 'high_alert':
                 return 'Siaga Tinggi';
 
             case 'danger':

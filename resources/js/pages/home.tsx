@@ -1,16 +1,24 @@
+import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import {
     AlertCircle,
     AlertTriangle,
+    BellRing,
+    BookOpen,
     CheckCircle2,
     Clock,
     Crosshair,
     Droplets,
     Layers,
+    LifeBuoy,
     Loader2,
     MapPin,
+    Phone,
     Radio,
+    Shield,
     ShieldAlert,
+    Stethoscope,
+    Tent,
     UploadCloud,
     Waves,
     X,
@@ -34,6 +42,8 @@ interface FloodReportForm {
 
 export default function Home({ reports = [] }: HomeProps) {
     const [showReportForm, setShowReportForm] = useState(false);
+    const [showPoskoModal, setShowPoskoModal] = useState(false); 
+    const [dismissAlert, setDismissAlert] = useState(false); // State notifikasi peringatan dini
 
     const [form, setForm] = useState<FloodReportForm>({
         latitude: '',
@@ -99,7 +109,7 @@ export default function Home({ reports = [] }: HomeProps) {
     const getCurrentLocation = () => {
         if (!navigator.geolocation) {
             setErrorMessage('Browser Anda tidak mendukung layanan lokasi GPS.');
-
+            
             return;
         }
 
@@ -165,8 +175,8 @@ export default function Home({ reports = [] }: HomeProps) {
      */
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) {
-return;
-}
+            return;
+        }
 
         const selectedFiles = Array.from(e.target.files);
 
@@ -282,25 +292,21 @@ return;
     return (
         <div className="min-h-screen bg-slate-50/70 font-sans text-slate-800 antialiased selection:bg-teal-700 selection:text-white">
             {/* Top Navigation Bar */}
-            <header className="sticky top-0 z-40 border-b border-teal-900/10 bg-teal-800 text-white shadow-md">
-                <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-                    <div className="flex items-center space-x-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20 backdrop-blur-md">
-                            <Waves className="h-6 w-6 text-teal-200" />
-                        </div>
-                        <div>
-                            <div className="flex items-center space-x-2">
-                                <h1 className="text-lg font-black tracking-wider">
-                                    SIGAP BANJIR
-                                </h1>
-                                <span className="inline-flex items-center rounded-full bg-teal-700/80 px-2 py-0.5 text-[10px] font-semibold text-teal-100 ring-1 ring-inset ring-teal-600">
-                                    PWA Siaga
-                                </span>
-                            </div>
-                            <p className="hidden text-xs text-teal-200/90 sm:block">
-                                Sistem Informasi & Gotong Royong Antisipasi Banjir
-                            </p>
-                        </div>
+
+            <Head title="SIGAP BANJIR" />
+
+            <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6">
+
+                <section className="flex flex-col gap-4 rounded-3xl bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 className="text-xl font-black text-slate-900">
+                            Pantau Banjir di Sekitar Anda
+                        </h2>
+
+                        <p className="mt-1 text-sm text-slate-500">
+                            Laporkan kondisi genangan secara langsung untuk membantu
+                            masyarakat dan petugas.
+                        </p>
                     </div>
 
                     <button
@@ -310,15 +316,63 @@ return;
                             setErrorMessage('');
                             setSuccessMessage('');
                         }}
-                        className="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-rose-950/20 transition hover:bg-rose-700 active:scale-95 sm:text-sm"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-rose-950/20 transition hover:bg-rose-700 active:scale-95"
                     >
                         <ShieldAlert className="h-4 w-4" />
-                        <span>🚨 Lapor Genangan</span>
+                        Lapor Genangan
                     </button>
-                </div>
-            </header>
+                </section>
+                
+                {/* --- NOTIFIKASI PERINGATAN DINI (EARLY WARNING) --- */}
+                {/* Hanya muncul jika ada data laporan dan ketinggian maksimal >= 10cm */}
+                {reports.length > 0 && maxWaterLevel >= 10 && !dismissAlert && (
+                    <section 
+                        className={`relative flex flex-col gap-3 rounded-2xl border p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between ${
+                            maxWaterLevel >= 50 ? 'border-red-200 bg-red-50/80' :
+                            maxWaterLevel >= 30 ? 'border-orange-200 bg-orange-50/80' :
+                            'border-amber-200 bg-amber-50/80'
+                        }`}
+                    >
+                        <div className="flex items-start gap-3 sm:items-center">
+                            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full shadow-sm ${
+                                maxWaterLevel >= 50 ? 'bg-red-100 text-red-600' :
+                                maxWaterLevel >= 30 ? 'bg-orange-100 text-orange-600' :
+                                'bg-amber-100 text-amber-600'
+                            }`}>
+                                <BellRing className={`h-5 w-5 ${maxWaterLevel >= 30 ? 'animate-pulse' : ''}`} />
+                            </div>
+                            <div className="pr-6 sm:pr-0">
+                                <h3 className={`text-sm font-bold uppercase tracking-wider ${
+                                    maxWaterLevel >= 50 ? 'text-red-900' :
+                                    maxWaterLevel >= 30 ? 'text-orange-900' :
+                                    'text-amber-900'
+                                }`}>
+                                    Peringatan Dini: Status {getSeverityDetails(maxWaterLevel).label}
+                                </h3>
+                                <p className={`mt-0.5 text-xs leading-relaxed ${
+                                    maxWaterLevel >= 50 ? 'text-red-700' :
+                                    maxWaterLevel >= 30 ? 'text-orange-700' :
+                                    'text-amber-700'
+                                }`}>
+                                    Terdeteksi <strong className="font-bold">{reports.length} titik genangan air</strong> aktif dengan estimasi ketinggian maksimal mencapai <strong className="font-bold">{maxWaterLevel} cm</strong>. Masyarakat di wilayah terdampak diimbau untuk meningkatkan kesiapsiagaan dan melihat panduan mitigasi.
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setDismissAlert(true)}
+                            className={`absolute right-3 top-3 rounded-full p-1.5 transition sm:static sm:right-auto sm:top-auto sm:shrink-0 ${
+                                maxWaterLevel >= 50 ? 'text-red-400 hover:bg-red-100 hover:text-red-600' :
+                                maxWaterLevel >= 30 ? 'text-orange-400 hover:bg-orange-100 hover:text-orange-600' :
+                                'text-amber-400 hover:bg-amber-100 hover:text-amber-600'
+                            }`}
+                        >
+                            <X className="h-4 w-4" />
+                        </button>
+                    </section>
+                )}
+                {/* --- END NOTIFIKASI PERINGATAN DINI --- */}
 
-            <main className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6">
                 {/* Summary / Quick Metric Strip */}
                 <section className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
                     <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
@@ -366,25 +420,29 @@ return;
                         </span>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
-                        <div className="flex items-center justify-between text-slate-500">
+                    {/* Tombol pemicu modal Posko Evakuasi terintegrasi di Quick Metric */}
+                    <button
+                        onClick={() => setShowPoskoModal(true)}
+                        className="flex flex-col items-start rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition-all hover:border-amber-300 hover:bg-amber-50 hover:shadow-md active:scale-95 text-left"
+                    >
+                        <div className="flex w-full items-center justify-between text-slate-500">
                             <span className="text-xs font-semibold uppercase tracking-wider">
-                                Kontak Darurat
+                                Posko & Darurat
                             </span>
                             <AlertCircle className="h-4 w-4 text-amber-600" />
                         </div>
                         <p className="mt-2 text-base font-bold text-slate-900">
                             112 / Tim Siaga
                         </p>
-                        <span className="text-[11px] text-slate-400">
-                            Evakuasi & Bantuan Cepat
+                        <span className="mt-0.5 text-[11px] font-medium text-teal-700 underline decoration-teal-700/30 underline-offset-2">
+                            Lihat Lokasi Evakuasi →
                         </span>
-                    </div>
+                    </button>
                 </section>
 
                 {/* Section Peta GIS */}
                 <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-                    <div className="mb-4 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
+                    <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                         <div>
                             <h2 className="text-base font-bold text-slate-900 sm:text-lg">
                                 Pemantauan Spasial Genangan (GIS)
@@ -393,21 +451,120 @@ return;
                                 Peta sebaran spasial lokasi genangan dan titik evakuasi secara langsung.
                             </p>
                         </div>
-                        <div className="mt-2 flex items-center gap-2 text-xs sm:mt-0">
-                            <span className="inline-flex items-center gap-1 text-slate-500">
-                                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Aman
-                            </span>
-                            <span className="inline-flex items-center gap-1 text-slate-500">
-                                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Waspada
-                            </span>
-                            <span className="inline-flex items-center gap-1 text-slate-500">
-                                <span className="h-2.5 w-2.5 rounded-full bg-rose-500" /> Bahaya
-                            </span>
+                        <div className="flex items-center justify-between gap-3 sm:justify-end">
+                            {/* Tombol alternatif pemicu Posko Evakuasi di atas Peta */}
+                            <button
+                                onClick={() => setShowPoskoModal(true)}
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-3 py-1.5 text-xs font-bold text-teal-700 transition hover:bg-teal-100 hover:text-teal-900 ring-1 ring-inset ring-teal-200"
+                            >
+                                <Tent className="h-4 w-4" />
+                                <span>Posko Evakuasi</span>
+                            </button>
+                            <div className="hidden items-center gap-2 text-[10px] font-medium sm:flex">
+                                <span className="inline-flex items-center gap-1 text-slate-500">
+                                    <span className="h-2 w-2 rounded-full bg-emerald-500" /> Aman
+                                </span>
+                                <span className="inline-flex items-center gap-1 text-slate-500">
+                                    <span className="h-2 w-2 rounded-full bg-amber-500" /> Waspada
+                                </span>
+                                <span className="inline-flex items-center gap-1 text-slate-500">
+                                    <span className="h-2 w-2 rounded-full bg-rose-500" /> Bahaya
+                                </span>
+                            </div>
                         </div>
                     </div>
 
                     <div className="overflow-hidden rounded-2xl border border-slate-200">
                         <FloodMap reports={reports} />
+                    </div>
+                </section>
+
+                {/* Section Edukasi Mitigasi */}
+                <section className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="flex items-center gap-2 text-base font-bold text-slate-900 sm:text-lg">
+                                <BookOpen className="h-5 w-5 text-teal-700" />
+                                Edukasi Mitigasi Banjir
+                            </h2>
+                            <p className="text-xs text-slate-500">
+                                Panduan kesiapsiagaan dan langkah evakuasi saat menghadapi banjir.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-3">
+                        {/* Pra-Bencana */}
+                        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                            <div className="mb-3 flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 ring-1 ring-inset ring-amber-200">
+                                    <AlertTriangle className="h-5 w-5" />
+                                </div>
+                                <h3 className="font-bold text-slate-800">Siaga (Sebelum)</h3>
+                            </div>
+                            <ul className="space-y-2.5 text-xs leading-relaxed text-slate-600">
+                                <li className="flex gap-2">
+                                    <span className="text-amber-500">•</span>
+                                    <span>Simpan dokumen penting dan surat berharga dalam wadah kedap air di tempat yang tinggi.</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-amber-500">•</span>
+                                    <span>Siapkan Tas Siaga Bencana (P3K, senter, makanan instan, pakaian ganti).</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-amber-500">•</span>
+                                    <span>Pantau terus notifikasi peringatan dini dari aplikasi SIGAP BANJIR.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Saat Bencana */}
+                        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                            <div className="mb-3 flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600 ring-1 ring-inset ring-rose-200">
+                                    <LifeBuoy className="h-5 w-5" />
+                                </div>
+                                <h3 className="font-bold text-slate-800">Tindakan (Saat)</h3>
+                            </div>
+                            <ul className="space-y-2.5 text-xs leading-relaxed text-slate-600">
+                                <li className="flex gap-2">
+                                    <span className="text-rose-500">•</span>
+                                    <span>Matikan segera aliran listrik dari meteran utama (MCB) rumah Anda.</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-rose-500">•</span>
+                                    <span>Evakuasi diri dan keluarga ke posko terdekat atau tempat yang lebih tinggi.</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-rose-500">•</span>
+                                    <span>Hindari berjalan atau mengemudi menerobos genangan air dan arus deras.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Pasca Bencana */}
+                        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                            <div className="mb-3 flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-200">
+                                    <Shield className="h-5 w-5" />
+                                </div>
+                                <h3 className="font-bold text-slate-800">Pemulihan (Pasca)</h3>
+                            </div>
+                            <ul className="space-y-2.5 text-xs leading-relaxed text-slate-600">
+                                <li className="flex gap-2">
+                                    <span className="text-emerald-500">•</span>
+                                    <span>Bersihkan rumah menggunakan disinfektan untuk mencegah penyebaran penyakit.</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-emerald-500">•</span>
+                                    <span>Waspadai binatang berbisa atau berbahaya yang mungkin terbawa oleh genangan air.</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-emerald-500">•</span>
+                                    <span>Pastikan instalasi listrik dan peralatan elektronik benar-benar kering sebelum dihidupkan.</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </section>
 
@@ -503,9 +660,119 @@ return;
                         </div>
                     )}
                 </section>
-            </main>
+            </div>
 
-            {/* Modal Formulir Lapor Banjir */}
+            {/* MODAL: POSKO EVAKUASI & NOMOR DARURAT */}
+            {showPoskoModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+                    <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-slate-100 bg-white shadow-2xl">
+                        {/* Header Modal */}
+                        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-6 py-4">
+                            <div className="flex items-center space-x-2.5">
+                                <div className="rounded-xl bg-teal-50 p-2 text-teal-700 ring-1 ring-teal-200">
+                                    <Tent className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-900">
+                                        Posko Evakuasi & Darurat
+                                    </h3>
+                                    <p className="text-xs text-slate-500">
+                                        Lokasi pengungsian, puskesmas, dan hotline
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setShowPoskoModal(false)}
+                                className="rounded-full p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        {/* Body Modal */}
+                        <div className="space-y-6 p-6">
+                            {/* Nomor Darurat */}
+                            <div className="space-y-3">
+                                <h4 className="flex items-center gap-2 text-sm font-bold text-slate-800">
+                                    <Phone className="h-4 w-4 text-rose-500" />
+                                    Nomor Panggilan Darurat
+                                </h4>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Call Center Bencana</p>
+                                        <p className="mt-1 text-lg font-black text-slate-800">112</p>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Basarnas / Tim SAR</p>
+                                        <p className="mt-1 text-lg font-black text-slate-800">115</p>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Ambulans</p>
+                                        <p className="mt-1 text-lg font-black text-slate-800">118 / 119</p>
+                                    </div>
+                                    <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Posko BPBD</p>
+                                        <p className="mt-1 text-lg font-black text-slate-800">(021) 123456</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Daftar Posko / Puskesmas */}
+                            <div className="space-y-3">
+                                <h4 className="flex items-center gap-2 text-sm font-bold text-slate-800">
+                                    <MapPin className="h-4 w-4 text-teal-600" />
+                                    Titik Posko & Puskesmas Siaga
+                                </h4>
+                                <div className="space-y-2">
+                                    <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
+                                        <div className="rounded-lg bg-teal-50 p-2 text-teal-700">
+                                            <Tent className="h-4 w-4" />
+                                        </div>
+                                        <div>
+                                            <h5 className="font-bold text-slate-800 text-sm">Posko Utama GOR Serbaguna</h5>
+                                            <p className="text-xs text-slate-500 mt-0.5">Kapasitas: 500 Jiwa • Tersedia Dapur Umum</p>
+                                            <p className="text-xs text-slate-600 mt-1">Jl. Pemuda No. 10</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
+                                        <div className="rounded-lg bg-rose-50 p-2 text-rose-600">
+                                            <Stethoscope className="h-4 w-4" />
+                                        </div>
+                                        <div>
+                                            <h5 className="font-bold text-slate-800 text-sm">Puskesmas Kecamatan (Siaga 24 Jam)</h5>
+                                            <p className="text-xs text-slate-500 mt-0.5">Penanganan Medis Pertama</p>
+                                            <p className="text-xs text-slate-600 mt-1">Jl. Kesehatan Raya No. 45</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
+                                        <div className="rounded-lg bg-teal-50 p-2 text-teal-700">
+                                            <Tent className="h-4 w-4" />
+                                        </div>
+                                        <div>
+                                            <h5 className="font-bold text-slate-800 text-sm">Balai Warga RW 03</h5>
+                                            <p className="text-xs text-slate-500 mt-0.5">Kapasitas: 150 Jiwa</p>
+                                            <p className="text-xs text-slate-600 mt-1">Jl. Cempaka III</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setShowPoskoModal(false)}
+                                className="w-full rounded-xl bg-slate-100 py-3 text-xs font-bold uppercase tracking-wider text-slate-600 transition hover:bg-slate-200"
+                            >
+                                Tutup Informasi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL: FORM LAPOR BANJIR */}
             {showReportForm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
                     <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-slate-100 bg-white shadow-2xl">

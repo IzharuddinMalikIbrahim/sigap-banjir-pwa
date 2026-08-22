@@ -16,7 +16,7 @@ class FloodReportController extends Controller
     {
         $reports = FloodReport::query()
             ->with('images')
-            ->where('status', 'verified')
+            ->where('status', 'published')
             ->where(function ($query) {
                 $query
                     ->whereNull('expired_at')
@@ -40,13 +40,31 @@ class FloodReportController extends Controller
     public function myReports(): Response
     {
         $reports = FloodReport::query()
-            ->with('images')
             ->where('user_id', auth()->id())
             ->latest('reported_at')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
-        return Inertia::render('flood-reports/my-reports', [
+        return Inertia::render('my-reports', [
             'reports' => $reports,
+        ]);
+    }
+
+    public function show(FloodReport $floodReport): Response
+    {
+        abort_unless(
+            $floodReport->user_id === auth()->id(),
+            403
+        );
+
+        $floodReport->load([
+            'images',
+            'verifications',
+            'verifier',
+        ]);
+
+        return Inertia::render('flood-reports/show', [
+            'report' => $floodReport,
         ]);
     }
 }

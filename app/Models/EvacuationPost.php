@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EvacuationPost extends Model
 {
@@ -42,16 +43,21 @@ class EvacuationPost extends Model
     /**
      * Scope active evacuation posts.
      */
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('status', 'active');
+    public function scopeActive(
+        Builder $query
+    ): Builder {
+        return $query->where(
+            'status',
+            'active'
+        );
     }
 
     /**
      * Scope evacuation posts that still have capacity.
      */
-    public function scopeAvailable(Builder $query): Builder
-    {
+    public function scopeAvailable(
+        Builder $query
+    ): Builder {
         return $query
             ->where('status', 'active')
             ->whereColumn(
@@ -64,8 +70,9 @@ class EvacuationPost extends Model
     /**
      * Scope full evacuation posts.
      */
-    public function scopeFull(Builder $query): Builder
-    {
+    public function scopeFull(
+        Builder $query
+    ): Builder {
         return $query->where(function ($query) {
             $query
                 ->where('status', 'full')
@@ -101,7 +108,8 @@ class EvacuationPost extends Model
     {
         return max(
             0,
-            $this->capacity - $this->current_occupancy
+            $this->capacity -
+                $this->current_occupancy
         );
     }
 
@@ -115,7 +123,10 @@ class EvacuationPost extends Model
         }
 
         return round(
-            ($this->current_occupancy / $this->capacity) * 100,
+            (
+                $this->current_occupancy /
+                $this->capacity
+            ) * 100,
             2
         );
     }

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminFloodReportController;
 use App\Http\Controllers\AdminEvacuationPostController;
+use App\Http\Controllers\AdminEducationController;
+use App\Http\Controllers\AdminVideoEducationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,6 +131,82 @@ Route::middleware([
         AdminEvacuationPostController::class,
         'destroy',
     ])->name('admin.posko.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Edukasi Mitigasi
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/edukasi-mitigasi', [
+        AdminEducationController::class,
+        'index',
+    ])->name('admin.edukasi-mitigasi');
+
+    Route::get('/edukasi-mitigasi/create', [
+        AdminEducationController::class,
+        'create',
+    ])->name('admin.edukasi-mitigasi.create');
+
+    Route::post('/edukasi-mitigasi', [
+        AdminEducationController::class,
+        'store',
+    ])->name('admin.edukasi-mitigasi.store');
+
+    Route::get('/edukasi-mitigasi/{educationContent}', [
+        AdminEducationController::class,
+        'show',
+    ])->name('admin.edukasi-mitigasi.show');
+
+    Route::get('/edukasi-mitigasi/{educationContent}/edit', [
+        AdminEducationController::class,
+        'edit',
+    ])->name('admin.edukasi-mitigasi.edit');
+
+    Route::put('/edukasi-mitigasi/{educationContent}', [
+        AdminEducationController::class,
+        'update',
+    ])->name('admin.edukasi-mitigasi.update');
+
+    Route::delete('/edukasi-mitigasi/{educationContent}', [
+        AdminEducationController::class,
+        'destroy',
+    ])->name('admin.edukasi-mitigasi.destroy');
+
+    Route::get('/video-edukasi', [
+        AdminVideoEducationController::class,
+        'index',
+    ])->name('admin.video-edukasi');
+
+    Route::get('/video-edukasi/create', [
+        AdminVideoEducationController::class,
+        'create',
+    ])->name('admin.video-edukasi.create');
+
+    Route::post('/video-edukasi', [
+        AdminVideoEducationController::class,
+        'store',
+    ])->name('admin.video-edukasi.store');
+
+    Route::get('/video-edukasi/{videoEducation}', [
+        AdminVideoEducationController::class,
+        'show',
+    ])->name('admin.video-edukasi.show');
+
+    Route::get('/video-edukasi/{videoEducation}/edit', [
+        AdminVideoEducationController::class,
+        'edit',
+    ])->name('admin.video-edukasi.edit');
+
+    Route::put('/video-edukasi/{videoEducation}', [
+        AdminVideoEducationController::class,
+        'update',
+    ])->name('admin.video-edukasi.update');
+
+    Route::delete('/video-edukasi/{videoEducation}', [
+        AdminVideoEducationController::class,
+        'destroy',
+    ])->name('admin.video-edukasi.destroy');
 
 });
 

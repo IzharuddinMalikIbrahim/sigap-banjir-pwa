@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FloodReport;
+use App\Models\VideoEducation;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -29,8 +30,15 @@ class FloodReportController extends Controller
             ->latest('reported_at')
             ->get();
 
+        $videos = VideoEducation::query()
+            ->where('status', 'published')
+            ->latest('published_at')
+            ->take(6)
+            ->get();
+
         return Inertia::render('home', [
             'reports' => $reports,
+            'videos' => $videos,
         ]);
     }
 

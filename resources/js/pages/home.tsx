@@ -20,6 +20,8 @@ import {
     Stethoscope,
     Tent,
     UploadCloud,
+    Video as VideoIcon,
+    PlayCircle,
     Waves,
     X,
 } from 'lucide-react';
@@ -28,8 +30,23 @@ import React, { useState } from 'react';
 import FloodMap from '@/components/map/flood-map';
 import type { FloodReport } from '@/types/flood';
 
+interface VideoEducation {
+    id: number;
+    title: string;
+    slug: string;
+    thumbnail: string | null;
+    video_path: string;
+    description: string | null;
+    category: string | null;
+    duration: number | null;
+    status: 'draft' | 'published' | 'archived';
+    published_at: string | null;
+    created_at: string;
+}
+
 interface HomeProps {
     reports: FloodReport[];
+    videos?: VideoEducation[];
 }
 
 interface FloodReportForm {
@@ -40,7 +57,7 @@ interface FloodReportForm {
     description: string;
 }
 
-export default function Home({ reports = [] }: HomeProps) {
+export default function Home({ reports = [], videos = [] }: HomeProps) {
     const [showReportForm, setShowReportForm] = useState(false);
     const [showPoskoModal, setShowPoskoModal] = useState(false); 
     const [dismissAlert, setDismissAlert] = useState(false); // State notifikasi peringatan dini
@@ -478,6 +495,64 @@ export default function Home({ reports = [] }: HomeProps) {
                         <FloodMap reports={reports} />
                     </div>
                 </section>
+
+                {/* Section Video Edukasi */}
+                {videos && videos.length > 0 && (
+                    <section className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="flex items-center gap-2 text-base font-bold text-slate-900 sm:text-lg">
+                                    <VideoIcon className="h-5 w-5 text-teal-700" />
+                                    Video Edukasi Mitigasi
+                                </h2>
+                                <p className="text-xs text-slate-500">
+                                    Kumpulan video panduan mitigasi dan dokumentasi banjir.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-6">
+                            {videos.map((video) => (
+                                <div key={video.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md cursor-pointer">
+                                    <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
+                                        <video
+                                            controls
+                                            playsInline
+                                            preload="metadata"
+                                            poster={video.thumbnail ? `/storage/${video.thumbnail}` : undefined}
+                                            className="h-full w-full object-cover"
+                                        >
+                                            <source src={`/storage/${video.video_path}`} type="video/mp4" />
+                                            Browser Anda tidak mendukung tag video.
+                                        </video>
+                                        {video.duration && (
+                                            <div className="pointer-events-none absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur">
+                                                {Math.floor(video.duration / 60).toString().padStart(2, '0')}:
+                                                {(video.duration % 60).toString().padStart(2, '0')}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="p-4">
+                                        <h3 className="line-clamp-2 text-sm font-bold leading-snug text-slate-900 group-hover:text-teal-700 transition-colors">
+                                            {video.title}
+                                        </h3>
+                                        <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-500">
+                                            {video.category && (
+                                                <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium text-slate-600">
+                                                    {video.category}
+                                                </span>
+                                            )}
+                                        </div>
+                                        {video.description && (
+                                            <p className="mt-2 line-clamp-2 text-xs text-slate-500">
+                                                {video.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* Section Edukasi Mitigasi */}
                 <section className="space-y-4">

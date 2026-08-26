@@ -1,10 +1,12 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import {
+    BookOpen,
     LayoutDashboard,
     LogOut,
     Map,
     Menu,
     Tent,
+    Video,
     Waves,
     X,
 } from 'lucide-react';
@@ -135,7 +137,6 @@ export default function AdminLayout({
                     </div>
 
                     {/* Navigation */}
-                    {/* Menggunakan `overflow-y-auto` agar jika menu panjang, hanya area menu ini yang scroll */}
                     <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 custom-scrollbar">
                         <Link
                             href="/admin/home"
@@ -163,6 +164,32 @@ export default function AdminLayout({
                             <Tent className="h-4 w-4" />
                             Posko
                         </Link>
+
+                        {/* --- MENU BARU: EDUKASI --- */}
+                        <div className="pt-4 pb-2">
+                            <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                Manajemen Edukasi
+                            </p>
+                        </div>
+
+                        <Link
+                            href="/admin/video-edukasi"
+                            onClick={closeSidebar}
+                            className={menuClass('/admin/video-edukasi')}
+                        >
+                            <Video className="h-4 w-4" />
+                            Video Edukasi
+                        </Link>
+
+                        <Link
+                            href="/admin/edukasi-mitigasi"
+                            onClick={closeSidebar}
+                            className={menuClass('/admin/edukasi-mitigasi')}
+                        >
+                            <BookOpen className="h-4 w-4" />
+                            Edukasi Mitigasi
+                        </Link>
+                        {/* --- END MENU BARU --- */}
                     </nav>
 
                     {/* User / Logout */}

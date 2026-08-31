@@ -208,17 +208,23 @@ class FloodReportController extends Controller
      * high_alert
      * danger
      */
-    private function calculateSeverity(float|int $waterLevel): string
-    {
+    private function calculateSeverity(
+        float|int $waterLevel
+    ): string {
         return match (true) {
+            // Siaga 4 - Normal
             $waterLevel < 10 => 'safe',
 
+            // Siaga 3 - Waspada
             $waterLevel <= 30 => 'warning',
 
+            // Siaga 2 - Siaga
             $waterLevel <= 50 => 'alert',
 
+            // Siaga 1 - Awas
             $waterLevel <= 100 => 'high_alert',
 
+            // Darurat
             default => 'danger',
         };
     }

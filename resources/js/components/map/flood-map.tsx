@@ -73,34 +73,39 @@ export default function FloodMap({
             case 'safe':
                 return {
                     color: '#10b981',
-                    label: 'Aman',
+                    label: 'Siaga 4 - Normal',
                     badge: 'bg-emerald-500 text-white',
                 };
+
             case 'warning':
                 return {
                     color: '#eab308',
-                    label: 'Waspada',
+                    label: 'Siaga 3 - Waspada',
                     badge: 'bg-amber-500 text-white',
                 };
+
             case 'alert':
                 return {
                     color: '#f97316',
-                    label: 'Siaga',
+                    label: 'Siaga 2 - Siaga',
                     badge: 'bg-orange-500 text-white',
                 };
+
             case 'high_alert':
             case 'high alert':
                 return {
                     color: '#ef4444',
-                    label: 'Siaga Tinggi',
+                    label: 'Siaga 1 - Awas',
                     badge: 'bg-rose-500 text-white',
                 };
+
             case 'danger':
                 return {
                     color: '#991b1b',
                     label: 'Darurat',
                     badge: 'bg-red-800 text-white animate-pulse',
                 };
+
             default:
                 return {
                     color: '#0f766e',
@@ -239,11 +244,30 @@ export default function FloodMap({
                 </div>
 
                 <div className="space-y-1.5 text-xs">
-                    <LegendItem color="#10b981" label="Aman (<10 cm)" />
-                    <LegendItem color="#eab308" label="Waspada (10-30 cm)" />
-                    <LegendItem color="#f97316" label="Siaga (30-50 cm)" />
-                    <LegendItem color="#ef4444" label="Siaga Tinggi (50-100 cm)" />
-                    <LegendItem color="#991b1b" label="Darurat (>100 cm)" />
+                    <LegendItem
+                        color="#10b981"
+                        label="Siaga 4 - Normal (<10 cm)"
+                    />
+
+                    <LegendItem
+                        color="#eab308"
+                        label="Siaga 3 - Waspada (10-30 cm)"
+                    />
+
+                    <LegendItem
+                        color="#f97316"
+                        label="Siaga 2 - Siaga (30-50 cm)"
+                    />
+
+                    <LegendItem
+                        color="#ef4444"
+                        label="Siaga 1 - Awas (50-100 cm)"
+                    />
+
+                    <LegendItem
+                        color="#991b1b"
+                        label="Darurat (>100 cm)"
+                    />
                 </div>
             </div>
         </div>

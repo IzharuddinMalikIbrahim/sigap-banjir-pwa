@@ -78,7 +78,7 @@ class FloodReportController extends Controller
             'images.*' => [
                 'image',
                 'mimes:jpg,jpeg,png,webp',
-                'max:2048',
+                'max:10240',
             ],
         ]);
 

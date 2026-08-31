@@ -21,7 +21,6 @@ import {
     Tent,
     UploadCloud,
     Video as VideoIcon,
-    PlayCircle,
     Waves,
     X,
 } from 'lucide-react';
@@ -204,11 +203,11 @@ export default function Home({ reports = [], videos = [] }: HomeProps) {
         }
 
         const invalidFile = selectedFiles.find(
-            (file) => file.size > 2 * 1024 * 1024,
+            (file) => file.size > 10 * 1024 * 1024,
         );
 
         if (invalidFile) {
-            setErrorMessage('Ukuran setiap file maksimal 2 MB.');
+            setErrorMessage('Ukuran setiap file maksimal 10 MB.');
 
             return;
         }
@@ -1013,7 +1012,7 @@ export default function Home({ reports = [], videos = [] }: HomeProps) {
                                         Sentuh untuk Ambil atau Unggah Foto
                                     </span>
                                     <span className="text-[10px] text-slate-400">
-                                        Format JPG / PNG, Maksimal 2MB per foto
+                                        Format JPG / PNG, Maksimal 10MB per foto
                                     </span>
                                 </div>
 

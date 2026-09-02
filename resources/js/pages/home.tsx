@@ -769,63 +769,106 @@ export default function Home({ reports = [], videos = [] }: HomeProps) {
                                     <Phone className="h-4 w-4 text-rose-500" />
                                     Nomor Panggilan Darurat
                                 </h4>
+
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Call Center Bencana</p>
-                                        <p className="mt-1 text-lg font-black text-slate-800">112</p>
+                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                                            Call Center Bencana
+                                        </p>
+                                        <p className="mt-1 text-lg font-black text-slate-800">
+                                            112
+                                        </p>
                                     </div>
+
                                     <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Basarnas / Tim SAR</p>
-                                        <p className="mt-1 text-lg font-black text-slate-800">115</p>
+                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                                            Tim SAR
+                                        </p>
+                                        <p className="mt-1 text-lg font-black text-slate-800">
+                                            0542-762111
+                                        </p>
                                     </div>
+
                                     <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Ambulans</p>
-                                        <p className="mt-1 text-lg font-black text-slate-800">118 / 119</p>
-                                    </div>
-                                    <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Posko BPBD</p>
-                                        <p className="mt-1 text-lg font-black text-slate-800">(021) 123456</p>
+                                        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                                            Ambulans
+                                        </p>
+                                        <p className="mt-1 text-lg font-black text-slate-800">
+                                            119
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Daftar Posko / Puskesmas */}
+                            {/* Posko BPBD */}
                             <div className="space-y-3">
                                 <h4 className="flex items-center gap-2 text-sm font-bold text-slate-800">
                                     <MapPin className="h-4 w-4 text-teal-600" />
-                                    Titik Posko & Puskesmas Siaga
+                                    Posko BPBD
                                 </h4>
+
                                 <div className="space-y-2">
+                                    {/* Wilayah Kota */}
                                     <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
                                         <div className="rounded-lg bg-teal-50 p-2 text-teal-700">
                                             <Tent className="h-4 w-4" />
                                         </div>
-                                        <div>
-                                            <h5 className="font-bold text-slate-800 text-sm">Posko Utama GOR Serbaguna</h5>
-                                            <p className="text-xs text-slate-500 mt-0.5">Kapasitas: 500 Jiwa • Tersedia Dapur Umum</p>
-                                            <p className="text-xs text-slate-600 mt-1">Jl. Pemuda No. 10</p>
+
+                                        <div className="min-w-0">
+                                            <h5 className="text-sm font-bold text-slate-800">
+                                                Wilayah Kota
+                                            </h5>
+                                            <p className="mt-1 text-sm font-black text-teal-700">
+                                                (0542) 8504191
+                                            </p>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
-                                        <div className="rounded-lg bg-rose-50 p-2 text-rose-600">
-                                            <Stethoscope className="h-4 w-4" />
-                                        </div>
-                                        <div>
-                                            <h5 className="font-bold text-slate-800 text-sm">Puskesmas Kecamatan (Siaga 24 Jam)</h5>
-                                            <p className="text-xs text-slate-500 mt-0.5">Penanganan Medis Pertama</p>
-                                            <p className="text-xs text-slate-600 mt-1">Jl. Kesehatan Raya No. 45</p>
-                                        </div>
-                                    </div>
-
+                                    {/* Wilayah Tengah */}
                                     <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
                                         <div className="rounded-lg bg-teal-50 p-2 text-teal-700">
                                             <Tent className="h-4 w-4" />
                                         </div>
-                                        <div>
-                                            <h5 className="font-bold text-slate-800 text-sm">Balai Warga RW 03</h5>
-                                            <p className="text-xs text-slate-500 mt-0.5">Kapasitas: 150 Jiwa</p>
-                                            <p className="text-xs text-slate-600 mt-1">Jl. Cempaka III</p>
+
+                                        <div className="min-w-0">
+                                            <h5 className="text-sm font-bold text-slate-800">
+                                                Wilayah Tengah
+                                            </h5>
+                                            <p className="mt-1 text-sm font-black text-teal-700">
+                                                (0542) 791941
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Wilayah Selatan */}
+                                    <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
+                                        <div className="rounded-lg bg-teal-50 p-2 text-teal-700">
+                                            <Tent className="h-4 w-4" />
+                                        </div>
+
+                                        <div className="min-w-0">
+                                            <h5 className="text-sm font-bold text-slate-800">
+                                                Wilayah Selatan
+                                            </h5>
+                                            <p className="mt-1 text-sm font-black text-teal-700">
+                                                (0542) 878207
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Wilayah Timur */}
+                                    <div className="flex items-start gap-3 rounded-xl border border-slate-200/60 bg-white p-3 shadow-sm">
+                                        <div className="rounded-lg bg-teal-50 p-2 text-teal-700">
+                                            <Tent className="h-4 w-4" />
+                                        </div>
+
+                                        <div className="min-w-0">
+                                            <h5 className="text-sm font-bold text-slate-800">
+                                                Wilayah Timur
+                                            </h5>
+                                            <p className="mt-1 text-sm font-black text-teal-700">
+                                                (0542) 743337 / (0542) 731606
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

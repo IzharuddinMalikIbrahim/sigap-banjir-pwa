@@ -141,9 +141,6 @@ export default function Home({ reports = [], videos = [] }: HomeProps) {
                     ...current,
                     latitude: lat.toFixed(8),
                     longitude: lng.toFixed(8),
-                    address:
-                        current.address ||
-                        `Koordinat: ${lat.toFixed(5)}, ${lng.toFixed(5)}`,
                 }));
 
                 setLoadingLocation(false);
